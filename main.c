@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:21:13 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/19 12:15:32 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/19 14:33:42 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,60 @@ void	free_line_ptrs(char *line_ptrs[1000])
 	}
 }
 
+t_points	*init_struct(int i, int j)
+{
+	t_points	*point;
+
+	point = (t_points *)malloc(sizeof(t_points));
+	point->x = j;
+	point->y = i;
+	return (point);
+}
+
+void	get_data(t_points ***data, char *line_ptrs[1000], int lines, int columns)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < lines)
+	{
+		data[i] = (t_points **)malloc(sizeof(t_points *) * columns);
+		j = 0;
+		while (j < columns)
+		{
+			data[i][j] = init_struct(i, j);
+			j++;
+		}
+		i++;
+	}
+}
+
 int	main(int argc, char *argv[])
 {
 	int			lines;
 	int			columns;
 	char		*line_ptrs[1000];
+	t_points	***data;
 
 	read_file(argv[1], line_ptrs, &lines, &columns);
-	//get_data(line_ptrs, lines, columns);
-	printf("lines %d\t\tcolumns %d\n", lines, columns);
-	for (int i = 0; line_ptrs[i] != NULL; i++)
-		printf("%s", line_ptrs[i]);
+	data = (t_points ***)malloc(sizeof(t_points **) * lines);
+	if (!data)
+	{
+		perror("Error allocating memory");
+		exit(1);
+	}
+	get_data(data, line_ptrs, lines, columns);
+	// printf("lines %d\t\tcolumns %d\n", lines, columns);
+	// for (int i = 0; line_ptrs[i] != NULL; i++)
+	// 	printf("%s", line_ptrs[i]);
+
+	for(int i = 0; i < lines; i++)
+	{
+		for(int j = 0; j < columns; j++)
+			printf("%d,%d  ", data[i][j]->x, data[i][j]->y);
+		printf("\n");
+	}
 	free_line_ptrs(line_ptrs);
 	return (1);
 }

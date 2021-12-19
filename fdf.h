@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/19 09:43:53 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/19 12:41:16 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@
 # include	"./minilibx-linux/mlx.h"
 # include	"./minilibx-linux/mlx_int.h"
 
-
+typedef struct s_points
+{
+	int	h;
+	int	x;
+	int	y;
+	int	z;
+}	t_points;
 
 #endif
