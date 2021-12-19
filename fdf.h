@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/19 12:41:16 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/19 16:16:27 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,12 @@ typedef struct s_points
 	int	y;
 	int	z;
 }	t_points;
+
+void		free_line_ptrs(char *line_ptrs[1000]);
+t_points	*init_struct(int i, int j, int k);
+void		init_file_read(char *filename, int *fd, int *lines, int *columns);
+void		read_file(char *file, char *pointer[1000], int *lines, int *cols);
+int			ft_atoi(const char *nptr);
+void		draw_map(t_points ***data, int lines, int columns);
 
 #endif

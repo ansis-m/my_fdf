@@ -1,4 +1,4 @@
-SRC = main.c get_next_line.c get_next_line_utils.c
+SRC = main.c main_utils.c ft_atoi.c draw_map.c get_next_line.c get_next_line_utils.c
 
 INC=/usr/include
 DIR=./minilibx-linux
