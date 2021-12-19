@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 15:27:35 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/19 16:23:17 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/19 16:46:52 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	read_file(char *filename, char *pointer[1000], int *lines, int *columns)
 			break ;
 		*lines += 1;
 	}
-	pointer[*lines + 1] = NULL;
 	close(fd);
 	i = 0;
 	while (pointer[0] && pointer[0][i])
