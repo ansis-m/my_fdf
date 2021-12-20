@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/19 18:09:05 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/20 10:19:32 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,13 @@ typedef struct s_vars
 	t_win_list	*win;
 }				t_vars;
 
+typedef struct s_wframe
+{
+	t_vars		window;
+	t_image		frame;
+	t_points	***data;
+}				t_wframe;
+
 void		free_line_ptrs(char *line_ptrs[1000]);
 t_points	*init_struct(int i, int j, int k);
 void		init_file_read(char *filename, int *fd, int *lines, int *columns);
@@ -57,6 +64,6 @@ int			ft_atoi(const char *nptr);
 void		draw_map(t_points ***data, int lines, int columns);
 
 void		pixel_put(t_image *img, int x, int y, int color);
-int			mouse_move(int x, int y, t_vars *vars);
+int			mouse_move(int x, int y, t_wframe *wframe);
 
 #endif
