@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/20 10:49:57 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/20 19:51:20 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void		read_file(char *file, char *pointer[1000], int *lines, int *cols);
 int			ft_atoi(const char *nptr);
 void		draw_map(t_points ***data, int lines, int columns);
 
-void		pixel_put(t_image *img, int x, int y, int color);
+void		pixel_put(t_image *img, int x, int y, float color);
 int			mouse_move(int x, int y, t_wframe *wframe);
 
 #endif
