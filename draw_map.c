@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/20 10:24:58 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/20 11:35:19 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,42 @@ void	pixel_put(t_image *img, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
+void	draw_line(t_image *frame, t_points a, t_points b)
+{
+	printf("%d,%d,%d,%d\t", a.x, a.y, b.x, b.y);
+}
+
 int	draw_frame(t_wframe	*wframe)
 {
-	// static int i = 10;
-	// static int j = 10;
-	// pixel_put(wframe.frame, i, j, 0x000000FF);
-	// mlx_put_image_to_window(wframe.window.mlx, wframe.window.win, wframe->frame->img, 0, 0);
-	// i = (i +1)%860;
-	// j = (j+1)%540;
+	int	i;
+	int	j;
+
+	if (wframe->draw_new)
+	{
+		mlx_destroy_image(wframe->window.mlx, wframe->frame.img);
+		wframe->frame.img = mlx_new_image(wframe->window.mlx, 800, 600);
+		i = 0;
+		while(i < wframe->lines -1)
+		{
+			j = 0;
+			while (j < wframe->cols - 1)
+			{
+				draw_line(&wframe->frame, *(wframe->data[i][j]), *(wframe->data[i + 1][j]));
+				draw_line(&wframe->frame, *(wframe->data[i][j]), *(wframe->data[i][j + 1]));
+				j++;
+			}
+			draw_line(&wframe->frame, *(wframe->data[i][j]), *(wframe->data[i + 1][j]));
+			i++;
+		}
+	}
+	mlx_put_image_to_window(wframe->window.mlx, wframe->window.win, wframe->frame.img, 0, 0);
 }
 
 int	mouse_move(int x, int y, t_wframe *wframe)
 {
 	mlx_clear_window(wframe->window.mlx, wframe->window.win);
 	if (1)
-		mlx_string_put(wframe->window.mlx, wframe->window.win, x, y, 0x00FFFFFF, "Where going");
+		mlx_string_put(wframe->window.mlx, wframe->window.win, x, y, 0xFFFFFF, "Where going");
 }
 
 int	key_hook(int keycode, t_wframe	*wframe)
@@ -58,6 +79,9 @@ void	draw_map(t_points ***data, int lines, int columns)
 	t_wframe	wframe;
 
 	wframe.data = data;
+	wframe.lines = lines;
+	wframe.cols = columns;
+	wframe.draw_new = true;
 	wframe.window.mlx = mlx_init();
 	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 600, "Hello fucker!");
 	wframe.frame.img = mlx_new_image(wframe.window.mlx, 800, 600);
@@ -80,4 +104,6 @@ typedef struct s_wframe
 	t_image		frame;
 	t_points	***data;
 }				t_wframe;
+
+pixel_put(&wframe->frame, i, j, 0x0000FF);
 */

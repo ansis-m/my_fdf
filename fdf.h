@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/20 10:19:32 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/20 10:49:57 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ typedef struct s_wframe
 	t_vars		window;
 	t_image		frame;
 	t_points	***data;
+	int			lines;
+	int			cols;
+	bool		draw_new;
 }				t_wframe;
 
 void		free_line_ptrs(char *line_ptrs[1000]);
