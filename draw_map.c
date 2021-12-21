@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/20 21:56:57 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/21 20:21:07 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,11 @@ void	draw_line(t_image *frame, t_points a, t_points b)
 		gradient = 1;
 	else
 		gradient = dy / dx;
+	printf("x: %d, %d\ty: %d, %d\t gradient: %f\n", a.x, b.x, a.y, b.y, gradient);
 	intersect_y = a.y;
 	if (steep)
 	{
-		while (a.x < a.y)
+		while (a.x < b.x)
 		{
 			i = intersect_y;
 			pixel_put(frame, a.x, i, 0.5); //rfPartOfNumber(intersect_y)
@@ -71,7 +72,7 @@ void	draw_line(t_image *frame, t_points a, t_points b)
 	}
 }
 
-int	draw_frame(t_wframe	*wframe) //create a new frame here!!!!!!!!
+int	draw_frame(t_wframe	*wframe)
 {
 	int		i;
 	int		j;
@@ -82,7 +83,7 @@ int	draw_frame(t_wframe	*wframe) //create a new frame here!!!!!!!!
 		new.img = mlx_new_image(wframe->window.mlx, 600, 600);
 		new.addr = mlx_get_data_addr(new.img, &new.bits_per_pixel, &new.line_length, &new.endian);
 		i = 0;
-		while(i < wframe->lines)
+		while (i < wframe->lines)
 		{
 			j = 0;
 			while (j < wframe->cols)
@@ -95,12 +96,11 @@ int	draw_frame(t_wframe	*wframe) //create a new frame here!!!!!!!!
 			}
 			i++;
 		}
-		mlx_destroy_image(wframe->window.mlx, wframe->frame.img);
+		//mlx_destroy_image(wframe->window.mlx, wframe->frame.img);
 		wframe->frame = new;
-		printf("new\n");
-		//wframe->draw_new = false; //To BE REMOVED
+		wframe->draw_new = false;
 	}
-	mlx_put_image_to_window(wframe->window.mlx, wframe->window.win, wframe->frame.img, 0, 0);
+	mlx_put_image_to_window(wframe->window.mlx, wframe->window.win, wframe->frame.img, 10, 10);
 }
 
 int	mouse_move(int x, int y, t_wframe *wframe)
@@ -132,6 +132,26 @@ void	scale(t_points ***data, int lines, int cols, float factor)
 	}
 }
 
+void	translate(t_points ***data, int lines, int cols, int x, int y)
+{
+	int	k;
+	int	l;
+
+	printf("hello from scale\n");
+	k = 0;
+	while (k < lines)
+	{
+		l = 0;
+		while (l < cols)
+		{
+			data[k][l]->x += x;
+			data[k][l]->y += y;
+			l++;
+		}
+		k++;
+	}
+}
+
 int	key_hook(int keycode, t_wframe	*wframe)
 {
 	if (keycode == XK_Escape)
@@ -143,6 +163,7 @@ int	key_hook(int keycode, t_wframe	*wframe)
 	else if (keycode == XK_KP_Add)
 		scale(wframe->data, wframe->lines, wframe->cols, 1.1);
 	printf("keycode: %d\n", keycode);
+	wframe->draw_new = true;
 	return (0);
 }
 
@@ -160,6 +181,7 @@ void	draw_map(t_points ***data, int lines, int columns)
 	wframe.lines = lines;
 	wframe.cols = columns;
 	scale(wframe.data, wframe.lines, wframe.cols, 30);
+	translate(wframe.data, wframe.lines, wframe.cols, 10, 10);
 	wframe.draw_new = true;
 	wframe.window.mlx = mlx_init();
 	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 600, "Hello fucker!");
