@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 09:34:33 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 11:08:23 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,36 +16,13 @@ void	pixel_put(t_image *frame, int x, int y, float density)
 {
 	char	*dst;
 	int		color;
+	int		intensity;
 
-	color = 0xFFFFFF;
-	dst = frame->addr + (x * frame->line_length + y * (frame->bits_per_pixel / 8));
-	*(unsigned int *)dst = color; //TO DO
-}
-
-void	clear_frame(t_image *frame)
-{
-	char	*dst;
-	int		color;
-
-	color = 0x99990000;
-	for(int i = 0; i < 601; i++)
-	{
-		for(int j = 0; j < 601; j++)
-		{
-			dst = frame->addr + (i * frame->line_length + j * (frame->bits_per_pixel / 8));
-			*(unsigned int *)dst = color;
-		}
-	}
-
-}
-
-void	swap(int *z, int *x)
-{
-	int	temp;
-
-	temp = *z;
-	*z = *x;
-	*x = temp;
+	intensity = 0xFF * density;
+	color = (intensity << 24 | intensity << 16 | intensity << 8 | intensity);
+	dst = frame->addr
+		+ (x * frame->line_length + y * (frame->bits_per_pixel / 8));
+	*(unsigned int *)dst = color;
 }
 
 void	draw_line(t_image *frame, t_points a, t_points b)
@@ -76,44 +53,33 @@ void	draw_line(t_image *frame, t_points a, t_points b)
 		gradient = dy / dx;
 	//printf("x: %d, %d\ty: %d, %d\t gradient: %f\n", a.x, b.x, a.y, b.y, gradient);
 	intersect_y = a.y;
-	if (steep)
+	
+	while (a.x < b.x)
 	{
-		while (a.x < b.x)
+		i = intersect_y;
+		if (steep)
 		{
-			i = intersect_y;
-			pixel_put(frame, a.x, i, 0.5); //rfPartOfNumber(intersect_y)
-			pixel_put(frame, a.x, i - 1, 0.5); //fPartOfNumber(intersect_y)
-			intersect_y += gradient;
-			a.x++;
+			pixel_put(frame, i/1000, a.x/1000, 0.5); //rfPartOfNumber(intersect_y)
+			pixel_put(frame, (i - 1)/1000, a.x/1000, 1); //fPartOfNumber(intersect_y)
 		}
+		else
+		{
+			pixel_put(frame, a.x/1000, i/1000, 0.5); //rfPartOfNumber(intersect_y)
+			pixel_put(frame, a.x/1000, (i - 1)/1000, 1); //fPartOfNumber(intersect_y)
+		}
+		intersect_y += gradient;
+		a.x++;
 	}
 }
 
-int	draw_frame(t_wframe	*wframe)
+int	loop(t_wframe	*wframe)
 {
-	int		i;
-	int		j;
-
 	if (wframe->draw_new)
-	{
-		clear_frame(&wframe->frame);
-		i = 0;
-		while (i < wframe->lines)
-		{
-			j = 0;
-			while (j < wframe->cols)
-			{
-				if (i < wframe->lines - 1)
-					draw_line(&wframe->frame, *(wframe->data[i][j]), *(wframe->data[i + 1][j]));
-				if (j < wframe->cols - 1)
-					draw_line(&wframe->frame, *(wframe->data[i][j]), *(wframe->data[i][j + 1]));
-				j++;
-			}
-			i++;
-		}
-		wframe->draw_new = false;
-	}
-	mlx_put_image_to_window(wframe->window.mlx, wframe->window.win, wframe->frame.img, 10, 10);
+		draw_frame(wframe);
+	wframe->draw_new = false;
+	mlx_put_image_to_window(wframe->window.mlx,
+		wframe->window.win, wframe->frame.img, 10, 10);
+	return (1);
 }
 
 int	mouse_move(int x, int y, t_wframe *wframe)
@@ -123,48 +89,6 @@ int	mouse_move(int x, int y, t_wframe *wframe)
 		mlx_string_put(wframe->window.mlx, wframe->window.win, x, y, 0xFFFFFF, "Where going");
 }
 
-void	scale(t_points ***data, int lines, int cols, float factor)
-{
-	int	k;
-	int	l;
-
-	printf("hello from scale\n");
-	k = 0;
-	while (k < lines)
-	{
-		l = 0;
-		while (l < cols)
-		{
-			data[k][l]->x *= factor;
-			data[k][l]->y *= factor;
-			data[k][l]->z *= factor;
-			data[k][l]->h *= factor;
-			l++;
-		}
-		k++;
-	}
-}
-
-void	translate(t_points ***data, int lines, int cols, int x, int y)
-{
-	int	k;
-	int	l;
-
-	printf("hello from scale\n");
-	k = 0;
-	while (k < lines)
-	{
-		l = 0;
-		while (l < cols)
-		{
-			data[k][l]->x += x;
-			data[k][l]->y += y;
-			l++;
-		}
-		k++;
-	}
-}
-
 int	key_hook(int keycode, t_wframe	*wframe)
 {
 	if (keycode == XK_Escape)
@@ -172,17 +96,11 @@ int	key_hook(int keycode, t_wframe	*wframe)
 		wframe->window.mlx->end_loop = True;
 	}
 	else if (keycode == XK_KP_Subtract)
-		scale(wframe->data, wframe->lines, wframe->cols, 0.9);
+		scale_xy(wframe->data, wframe->lines, wframe->cols, 0.9);
 	else if (keycode == XK_KP_Add)
-		scale(wframe->data, wframe->lines, wframe->cols, 1.1);
+		scale_xy(wframe->data, wframe->lines, wframe->cols, 1.1);
 	printf("keycode: %d\n", keycode);
 	wframe->draw_new = true;
-	return (0);
-}
-
-int	mouse_hook(int keycode, t_wframe wframe)
-{
-	printf("mouse keycode: %d\n", keycode);
 	return (0);
 }
 
@@ -193,32 +111,19 @@ void	draw_map(t_points ***data, int lines, int columns)
 	wframe.data = data;
 	wframe.lines = lines;
 	wframe.cols = columns;
-	scale(wframe.data, wframe.lines, wframe.cols, 30);
-	translate(wframe.data, wframe.lines, wframe.cols, 10, 10);
+	scale_xy(wframe.data, wframe.lines, wframe.cols, 10000);
+	translate(wframe, 10, 10);
 	wframe.draw_new = true;
 	wframe.window.mlx = mlx_init();
 	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 600, "Hello fucker!");
 	wframe.frame.img = mlx_new_image(wframe.window.mlx, 600, 600);
 	wframe.frame.addr = mlx_get_data_addr(wframe.frame.img, &wframe.frame.bits_per_pixel, &wframe.frame.line_length, &wframe.frame.endian);
-	printf("frame from main: %p\n", &wframe.frame);
 	mlx_key_hook(wframe.window.win, &key_hook, &wframe);
-	mlx_mouse_hook(wframe.window.win, &mouse_hook, &wframe);
 	mlx_hook(wframe.window.win, 6, 1L << 6, &mouse_move, &wframe);
-	mlx_loop_hook(wframe.window.mlx, &draw_frame, &wframe);
+	mlx_loop_hook(wframe.window.mlx, &loop, &wframe);
 	mlx_loop(wframe.window.mlx);
 	mlx_destroy_image(wframe.window.mlx, wframe.frame.img);
 	mlx_destroy_window(wframe.window.mlx, wframe.window.win);
 	mlx_destroy_display(wframe.window.mlx);
 	free(wframe.window.mlx);
 }
-
-/*
-typedef struct s_wframe
-{
-	t_vars		window;
-	t_image		frame;
-	t_points	***data;
-}				t_wframe;
-
-pixel_put(&wframe->frame, i, j, 0x0000FF);
-*/
