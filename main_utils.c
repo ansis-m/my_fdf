@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 15:27:35 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/19 16:46:52 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 13:04:39 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_points	*init_struct(int i, int j, int k)
 		point->y = i;
 		point->h = k;
 		point->z = k;
+		point->f = F;
 	}
 	return (point);
 }

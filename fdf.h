@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 10:35:18 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 13:25:45 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,17 @@
 # include	"./minilibx-linux/mlx.h"
 # include	"./minilibx-linux/mlx_int.h"
 
+//Scaling factor F
+# define F 10000
+
 typedef struct s_points
 {
 	int	h;
 	int	x;
 	int	y;
 	int	z;
+	int	f;
 }	t_points;
-
-// typedef struct s_image
-// {
-// 	void	*img;
-// 	char	*addr;
-// 	int		bits_per_pixel;
-// 	int		line_length;
-// 	int		endian;
-// }				t_image;
 
 typedef struct  s_image
 {
@@ -88,5 +83,7 @@ void		swap(int *z, int *x);
 int			draw_frame(t_wframe	*wframe);
 void		scale_xy(t_points ***data, int lines, int cols, float factor);
 void		translate(t_wframe wframe, int x, int y);
+void		reset(t_points ***data, int lines, int cols);
+void		isometric(t_points ***data, int lines, int cols);
 
 #endif

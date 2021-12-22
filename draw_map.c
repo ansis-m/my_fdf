@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 11:08:23 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 14:01:52 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,28 @@ void	pixel_put(t_image *frame, int x, int y, float density)
 	int		color;
 	int		intensity;
 
+	if (density < 0.1)
+		return ;
 	intensity = 0xFF * density;
 	color = (intensity << 24 | intensity << 16 | intensity << 8 | intensity);
 	dst = frame->addr
 		+ (x * frame->line_length + y * (frame->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
+}
+
+float	fraction(float x)
+{
+	int	integer;
+
+	integer = x;
+	if (x > 0)
+		return (x - integer);
+	return (x - integer + 1);
+}
+
+float	residue(float x)
+{
+	return (1 - fraction(x));
 }
 
 void	draw_line(t_image *frame, t_points a, t_points b)
@@ -51,21 +68,19 @@ void	draw_line(t_image *frame, t_points a, t_points b)
 		gradient = 1;
 	else
 		gradient = dy / dx;
-	//printf("x: %d, %d\ty: %d, %d\t gradient: %f\n", a.x, b.x, a.y, b.y, gradient);
 	intersect_y = a.y;
-	
 	while (a.x < b.x)
 	{
 		i = intersect_y;
 		if (steep)
 		{
-			pixel_put(frame, i/1000, a.x/1000, 0.5); //rfPartOfNumber(intersect_y)
-			pixel_put(frame, (i - 1)/1000, a.x/1000, 1); //fPartOfNumber(intersect_y)
+			pixel_put(frame, i / F, a.x / F, residue(intersect_y));
+			pixel_put(frame, (i - F) / F, a.x / F, fraction(intersect_y));
 		}
 		else
 		{
-			pixel_put(frame, a.x/1000, i/1000, 0.5); //rfPartOfNumber(intersect_y)
-			pixel_put(frame, a.x/1000, (i - 1)/1000, 1); //fPartOfNumber(intersect_y)
+			pixel_put(frame, a.x / F, i / F, residue(intersect_y));
+			pixel_put(frame, a.x / F, (i - F) / F, fraction(intersect_y));
 		}
 		intersect_y += gradient;
 		a.x++;
@@ -78,7 +93,7 @@ int	loop(t_wframe	*wframe)
 		draw_frame(wframe);
 	wframe->draw_new = false;
 	mlx_put_image_to_window(wframe->window.mlx,
-		wframe->window.win, wframe->frame.img, 10, 10);
+		wframe->window.win, wframe->frame.img, 0, 0);
 	return (1);
 }
 
@@ -104,6 +119,26 @@ int	key_hook(int keycode, t_wframe	*wframe)
 	return (0);
 }
 
+void	isometric(t_points ***data, int lines, int cols)
+{
+	int	k;
+	int	l;
+
+	k = 0;
+	while (k < lines)
+	{
+		l = 0;
+		while (l < cols)
+		{
+			data[k][l]->x = (data[k][l]->x - data[k][l]->z) * 0.8944;
+			data[k][l]->y = (data[k][l]->x + data[k][l]->z) * 0.4472 - data[k][l]->y;
+			data[k][l]->h = 1;
+			l++;
+		}
+		k++;
+	}
+}
+
 void	draw_map(t_points ***data, int lines, int columns)
 {
 	t_wframe	wframe;
@@ -111,8 +146,13 @@ void	draw_map(t_points ***data, int lines, int columns)
 	wframe.data = data;
 	wframe.lines = lines;
 	wframe.cols = columns;
-	scale_xy(wframe.data, wframe.lines, wframe.cols, 10000);
-	translate(wframe, 10, 10);
+	
+	init(wframe.data, wframe.lines, wframe.cols);
+	scale_xy(wframe.data, wframe.lines, wframe.cols, 10);
+	translate(wframe, 50, 200);
+	isometric(wframe.data, wframe.lines, wframe.cols);
+	//reset(wframe.data, wframe.lines, wframe.cols);  //NOT needed here but elswhere
+	
 	wframe.draw_new = true;
 	wframe.window.mlx = mlx_init();
 	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 600, "Hello fucker!");

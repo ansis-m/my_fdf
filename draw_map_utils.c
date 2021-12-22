@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 10:10:53 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 10:34:40 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 13:51:45 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	draw_frame(t_wframe	*wframe)
 	int		j;
 
 	clear_frame(&wframe->frame);
+	//calculate_projection!!!!
 	i = 0;
 	while (i < wframe->lines)
 	{
@@ -60,6 +61,27 @@ int	draw_frame(t_wframe	*wframe)
 	return (1);
 }
 
+void	init(t_points ***data, int lines, int cols)
+{
+	int	k;
+	int	l;
+
+	k = 0;
+	while (k < lines)
+	{
+		l = 0;
+		while (l < cols)
+		{
+			data[k][l]->x *= F;
+			data[k][l]->y *= F;
+			data[k][l]->z *= F;
+			data[k][l]->f = F;
+			l++;
+		}
+		k++;
+	}
+}
+
 void	scale_xy(t_points ***data, int lines, int cols, float factor)
 {
 	int	k;
@@ -73,6 +95,27 @@ void	scale_xy(t_points ***data, int lines, int cols, float factor)
 		{
 			data[k][l]->x *= factor;
 			data[k][l]->y *= factor;
+			data[k][l]->f *= factor;
+			l++;
+		}
+		k++;
+	}
+}
+
+void	reset(t_points ***data, int lines, int cols)
+{
+	int	k;
+	int	l;
+
+	k = 0;
+	while (k < lines)
+	{
+		l = 0;
+		while (l < cols)
+		{
+			data[k][l]->x = l * data[k][l]->f;
+			data[k][l]->y = k * data[k][l]->f;
+			data[k][l]->h = data[k][l]->z;
 			l++;
 		}
 		k++;
@@ -90,8 +133,8 @@ void	translate(t_wframe wframe, int x, int y)
 		l = 0;
 		while (l < wframe.cols)
 		{
-			wframe.data[k][l]->x += x;
-			wframe.data[k][l]->y += y;
+			wframe.data[k][l]->x += x * F;
+			wframe.data[k][l]->y += y * F;
 			l++;
 		}
 		k++;
