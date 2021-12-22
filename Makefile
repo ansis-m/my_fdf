@@ -16,7 +16,7 @@ RM = rm -rf
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIBRARY)
+$(NAME): $(OBJ) $(LIBRARY) fdf.h
 	$(CC) -o $(NAME) $(OBJ) $(LIBRARY) $(LFLAGS)
 
 $(LIBRARY):

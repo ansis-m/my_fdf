@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 10:10:53 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 18:24:03 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 19:48:18 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	clear_frame(t_image *frame)
 	int		i;
 	int		j;
 
-	color = 0x00000000;
+	color = 0x000055;
 	i = 0;
-	while (i < W)
+	while (i < H)
 	{
 		j = 0;
-		while (j < H)
+		while (j < W)
 		{
 			dst = frame->addr + i * frame->line_length
 				+ j * (frame->bits_per_pixel / 8);
@@ -37,8 +37,45 @@ void	clear_frame(t_image *frame)
 
 void	center_projection(t_wframe *wframe)
 {
-}
+	int		i;
+	int		j;
+	int		xxyy[4];
 
+	xxyy[0] = wframe->data[0][0]->x;
+	xxyy[1] = wframe->data[0][0]->x;
+	xxyy[2] = wframe->data[0][0]->y;
+	xxyy[3] = wframe->data[0][0]->y;
+	i = 0;
+	while (i < wframe->lines)
+	{
+		j = 0;
+		while (j < wframe->cols)
+		{
+			if (wframe->data[i][j]->x > xxyy[0])
+				xxyy[0] = wframe->data[i][j]->x;
+			if (wframe->data[i][j]->x < xxyy[1])
+				xxyy[1] = wframe->data[i][j]->x;
+			if (wframe->data[i][j]->y > xxyy[2])
+				xxyy[2] = wframe->data[i][j]->y;
+			if (wframe->data[i][j]->y < xxyy[3])
+				xxyy[3] = wframe->data[i][j]->y;
+			j++;
+		}
+		i++;
+	}
+	i = 0;
+	while (i < wframe->lines)
+	{
+		j = 0;
+		while (j < wframe->cols)
+		{
+			wframe->data[i][j]->x += (H * F - xxyy[0] - xxyy[1]) / 2;
+			wframe->data[i][j]->y += (W * F - xxyy[2] - xxyy[3]) / 2;
+			j++;
+		}
+		i++;
+	}
+}
 
 int	draw_frame(t_wframe	*wframe)
 {
@@ -46,8 +83,8 @@ int	draw_frame(t_wframe	*wframe)
 	int		j;
 
 	clear_frame(&wframe->frame);
-	center_projection(wframe);
-	//calculate_projection!!!!
+	if (wframe->center)
+		center_projection(wframe);
 	i = 0;
 	while (i < wframe->lines)
 	{

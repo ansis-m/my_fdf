@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 18:24:29 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 19:45:18 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,15 +111,30 @@ int	key_hook(int keycode, t_wframe	*wframe)
 	else if (keycode == XK_KP_Subtract)
 		scale_xy(wframe->data, wframe->lines, wframe->cols, 0.8);
 	else if (keycode == XK_KP_Add)
+	{
 		scale_xy(wframe->data, wframe->lines, wframe->cols, 1.2);
+		wframe->center = true;
+	}
 	else if (keycode == XK_Down)
+	{
 		translate(wframe, 10, 0);
+		wframe->center = false;
+	}
 	else if (keycode == XK_Up)
+	{
 		translate(wframe, -10, 0);
+		wframe->center = false;
+	}
 	else if (keycode == XK_Right)
+	{
 		translate(wframe, 0, 10);
+		wframe->center = false;
+	}
 	else if (keycode == XK_Left)
+	{
 		translate(wframe, 0, -10);
+		wframe->center = false;
+	}
 	wframe->draw_new = true;
 	return (0);
 }
@@ -154,11 +169,13 @@ void	draw_map(t_points ***data, int lines, int columns)
 	
 	init_points(wframe.data, wframe.lines, wframe.cols);
 	scale_xy(wframe.data, wframe.lines, wframe.cols, 10);
-	//rotate_z(wframe.data, wframe.lines, wframe.cols, 0.785398);
-	translate(&wframe, 50, 200);
-	isometric(wframe.data, wframe.lines, wframe.cols);
-	//reset(wframe.data, wframe.lines, wframe.cols);  //NOT needed here but elswhere
 	
+	translate(&wframe, 50, 200);
+	//rotate_z(wframe.data, wframe.lines, wframe.cols, 0.785398);
+	isometric(wframe.data, wframe.lines, wframe.cols);
+	
+	//reset(wframe.data, wframe.lines, wframe.cols);  //NOT needed here but elswhere
+	wframe.center = true;
 	wframe.draw_new = true;
 	wframe.window.mlx = mlx_init();
 	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 600, "Hello fucker!");

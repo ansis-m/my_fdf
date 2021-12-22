@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 18:22:36 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 19:34:43 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 //Scaling factor F
 # define F 10000
 //width of an image
-# define W	600
+# define W	1000
 //height of an image
 # define H	600
 
@@ -72,6 +72,7 @@ typedef struct s_wframe
 	int			lines;
 	int			cols;
 	bool		draw_new;
+	bool		center;
 }				t_wframe;
 
 void		free_line_ptrs(char *line_ptrs[1000]);
