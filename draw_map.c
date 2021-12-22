@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/21 20:21:07 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 09:34:33 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,23 @@ void	pixel_put(t_image *frame, int x, int y, float density)
 	color = 0xFFFFFF;
 	dst = frame->addr + (x * frame->line_length + y * (frame->bits_per_pixel / 8));
 	*(unsigned int *)dst = color; //TO DO
+}
+
+void	clear_frame(t_image *frame)
+{
+	char	*dst;
+	int		color;
+
+	color = 0x99990000;
+	for(int i = 0; i < 601; i++)
+	{
+		for(int j = 0; j < 601; j++)
+		{
+			dst = frame->addr + (i * frame->line_length + j * (frame->bits_per_pixel / 8));
+			*(unsigned int *)dst = color;
+		}
+	}
+
 }
 
 void	swap(int *z, int *x)
@@ -57,7 +74,7 @@ void	draw_line(t_image *frame, t_points a, t_points b)
 		gradient = 1;
 	else
 		gradient = dy / dx;
-	printf("x: %d, %d\ty: %d, %d\t gradient: %f\n", a.x, b.x, a.y, b.y, gradient);
+	//printf("x: %d, %d\ty: %d, %d\t gradient: %f\n", a.x, b.x, a.y, b.y, gradient);
 	intersect_y = a.y;
 	if (steep)
 	{
@@ -76,12 +93,10 @@ int	draw_frame(t_wframe	*wframe)
 {
 	int		i;
 	int		j;
-	t_image	new;
 
 	if (wframe->draw_new)
 	{
-		new.img = mlx_new_image(wframe->window.mlx, 600, 600);
-		new.addr = mlx_get_data_addr(new.img, &new.bits_per_pixel, &new.line_length, &new.endian);
+		clear_frame(&wframe->frame);
 		i = 0;
 		while (i < wframe->lines)
 		{
@@ -89,15 +104,13 @@ int	draw_frame(t_wframe	*wframe)
 			while (j < wframe->cols)
 			{
 				if (i < wframe->lines - 1)
-					draw_line(&new, *(wframe->data[i][j]), *(wframe->data[i + 1][j]));
+					draw_line(&wframe->frame, *(wframe->data[i][j]), *(wframe->data[i + 1][j]));
 				if (j < wframe->cols - 1)
-					draw_line(&new, *(wframe->data[i][j]), *(wframe->data[i][j + 1]));
+					draw_line(&wframe->frame, *(wframe->data[i][j]), *(wframe->data[i][j + 1]));
 				j++;
 			}
 			i++;
 		}
-		//mlx_destroy_image(wframe->window.mlx, wframe->frame.img);
-		wframe->frame = new;
 		wframe->draw_new = false;
 	}
 	mlx_put_image_to_window(wframe->window.mlx, wframe->window.win, wframe->frame.img, 10, 10);

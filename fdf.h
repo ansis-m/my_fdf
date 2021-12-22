@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/20 19:51:20 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 09:13:59 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,30 @@ typedef struct s_points
 	int	z;
 }	t_points;
 
-typedef struct s_image
+// typedef struct s_image
+// {
+// 	void	*img;
+// 	char	*addr;
+// 	int		bits_per_pixel;
+// 	int		line_length;
+// 	int		endian;
+// }				t_image;
+
+typedef struct  s_image
 {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
+	XImage                  *img;
+	Pixmap                  pix;
+	GC                              gc;
+	int                             line_length;
+	int                             bits_per_pixel;
+	int                             width;
+	int                             height;
 	int		endian;
-}				t_image;
+	int                             type;
+	int                             format;
+	char                    *addr;
+	XShmSegmentInfo shm;
+}                               t_image;
 
 typedef struct s_vars
 {
