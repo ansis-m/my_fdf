@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 13:25:45 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 18:22:36 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@
 
 //Scaling factor F
 # define F 10000
+//width of an image
+# define W	600
+//height of an image
+# define H	600
 
 typedef struct s_points
 {
@@ -82,8 +86,11 @@ void		clear_frame(t_image *frame);
 void		swap(int *z, int *x);
 int			draw_frame(t_wframe	*wframe);
 void		scale_xy(t_points ***data, int lines, int cols, float factor);
-void		translate(t_wframe wframe, int x, int y);
+void		translate(t_wframe *wframe, int x, int y);
 void		reset(t_points ***data, int lines, int cols);
 void		isometric(t_points ***data, int lines, int cols);
+void		init_points(t_points ***data, int lines, int cols);
+void		rotate_z(t_points ***data, int lines, int cols, float radians);
+void		center_projection(t_wframe *wframe);
 
 #endif

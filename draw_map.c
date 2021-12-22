@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 14:01:52 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/22 18:24:29 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	pixel_put(t_image *frame, int x, int y, float density)
 	if (density < 0.1)
 		return ;
 	intensity = 0xFF * density;
-	color = (intensity << 24 | intensity << 16 | intensity << 8 | intensity);
+	color = 0xFFFFFF; // (intensity << 24 | intensity << 16 | intensity << 8 | intensity);
 	dst = frame->addr
 		+ (x * frame->line_length + y * (frame->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
@@ -74,13 +74,13 @@ void	draw_line(t_image *frame, t_points a, t_points b)
 		i = intersect_y;
 		if (steep)
 		{
-			pixel_put(frame, i / F, a.x / F, residue(intersect_y));
-			pixel_put(frame, (i - F) / F, a.x / F, fraction(intersect_y));
+			pixel_put(frame, i / F, a.x / F, 1);//residue(intersect_y));
+			pixel_put(frame, (i - F) / F, a.x / F, 1);//fraction(intersect_y));
 		}
 		else
 		{
-			pixel_put(frame, a.x / F, i / F, residue(intersect_y));
-			pixel_put(frame, a.x / F, (i - F) / F, fraction(intersect_y));
+			pixel_put(frame, a.x / F, i / F, 1);//residue(intersect_y));
+			pixel_put(frame, a.x / F, (i - F) / F, 1);//fraction(intersect_y));
 		}
 		intersect_y += gradient;
 		a.x++;
@@ -107,14 +107,19 @@ int	mouse_move(int x, int y, t_wframe *wframe)
 int	key_hook(int keycode, t_wframe	*wframe)
 {
 	if (keycode == XK_Escape)
-	{
 		wframe->window.mlx->end_loop = True;
-	}
 	else if (keycode == XK_KP_Subtract)
-		scale_xy(wframe->data, wframe->lines, wframe->cols, 0.9);
+		scale_xy(wframe->data, wframe->lines, wframe->cols, 0.8);
 	else if (keycode == XK_KP_Add)
-		scale_xy(wframe->data, wframe->lines, wframe->cols, 1.1);
-	printf("keycode: %d\n", keycode);
+		scale_xy(wframe->data, wframe->lines, wframe->cols, 1.2);
+	else if (keycode == XK_Down)
+		translate(wframe, 10, 0);
+	else if (keycode == XK_Up)
+		translate(wframe, -10, 0);
+	else if (keycode == XK_Right)
+		translate(wframe, 0, 10);
+	else if (keycode == XK_Left)
+		translate(wframe, 0, -10);
 	wframe->draw_new = true;
 	return (0);
 }
@@ -147,16 +152,17 @@ void	draw_map(t_points ***data, int lines, int columns)
 	wframe.lines = lines;
 	wframe.cols = columns;
 	
-	init(wframe.data, wframe.lines, wframe.cols);
+	init_points(wframe.data, wframe.lines, wframe.cols);
 	scale_xy(wframe.data, wframe.lines, wframe.cols, 10);
-	translate(wframe, 50, 200);
+	//rotate_z(wframe.data, wframe.lines, wframe.cols, 0.785398);
+	translate(&wframe, 50, 200);
 	isometric(wframe.data, wframe.lines, wframe.cols);
 	//reset(wframe.data, wframe.lines, wframe.cols);  //NOT needed here but elswhere
 	
 	wframe.draw_new = true;
 	wframe.window.mlx = mlx_init();
 	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 600, "Hello fucker!");
-	wframe.frame.img = mlx_new_image(wframe.window.mlx, 600, 600);
+	wframe.frame.img = mlx_new_image(wframe.window.mlx, W, H);
 	wframe.frame.addr = mlx_get_data_addr(wframe.frame.img, &wframe.frame.bits_per_pixel, &wframe.frame.line_length, &wframe.frame.endian);
 	mlx_key_hook(wframe.window.win, &key_hook, &wframe);
 	mlx_hook(wframe.window.win, 6, 1L << 6, &mouse_move, &wframe);
