@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 19:34:43 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 13:55:54 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include	<stdlib.h>
 # include	<stdbool.h>
 # include	<limits.h>
+#define _USE_MATH_DEFINES
 # include	<math.h>
 # include	<sys/types.h>
 # include	<sys/stat.h>
@@ -27,7 +28,7 @@
 # include	"./minilibx-linux/mlx_int.h"
 
 //Scaling factor F
-# define F 10000
+# define F 1
 //width of an image
 # define W	1000
 //height of an image
@@ -36,9 +37,9 @@
 typedef struct s_points
 {
 	int	h;
-	int	x;
-	int	y;
-	int	z;
+	double	x;
+	double	y;
+	double	z;
 	int	f;
 }	t_points;
 
@@ -81,17 +82,18 @@ void		init_file_read(char *filename, int *fd, int *lines, int *columns);
 void		read_file(char *file, char *pointer[1000], int *lines, int *cols);
 int			ft_atoi(const char *nptr);
 void		draw_map(t_points ***data, int lines, int columns);
-void		pixel_put(t_image *img, int x, int y, float color);
+void		pixel_put(t_image *img, int x, int y, double color);
 int			mouse_move(int x, int y, t_wframe *wframe);
 void		clear_frame(t_image *frame);
-void		swap(int *z, int *x);
+void		swap(double *z, double *x);
 int			draw_frame(t_wframe	*wframe);
-void		scale_xy(t_points ***data, int lines, int cols, float factor);
+void		scale_xy(t_points ***data, int lines, int cols, double factor);
 void		translate(t_wframe *wframe, int x, int y);
 void		reset(t_points ***data, int lines, int cols);
 void		isometric(t_points ***data, int lines, int cols);
 void		init_points(t_points ***data, int lines, int cols);
-void		rotate_z(t_points ***data, int lines, int cols, float radians);
+void		rotate_z(t_points ***data, int lines, int cols, double radians);
 void		center_projection(t_wframe *wframe);
+void		draw_line(t_image *frame, t_points a, t_points b);
 
 #endif

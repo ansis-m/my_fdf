@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 10:10:53 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 19:48:18 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 12:49:25 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	clear_frame(t_image *frame)
 	int		i;
 	int		j;
 
-	color = 0x000055;
+	color = 0x000000;
 	i = 0;
 	while (i < H)
 	{
@@ -69,8 +69,8 @@ void	center_projection(t_wframe *wframe)
 		j = 0;
 		while (j < wframe->cols)
 		{
-			wframe->data[i][j]->x += (H * F - xxyy[0] - xxyy[1]) / 2;
-			wframe->data[i][j]->y += (W * F - xxyy[2] - xxyy[3]) / 2;
+			wframe->data[i][j]->x += (H - xxyy[0] - xxyy[1]) / 2;
+			wframe->data[i][j]->y += (W - xxyy[2] - xxyy[3]) / 2;
 			j++;
 		}
 		i++;
@@ -125,7 +125,7 @@ void	init_points(t_points ***data, int lines, int cols)
 	}
 }
 
-void	scale_xy(t_points ***data, int lines, int cols, float factor)
+void	scale_xy(t_points ***data, int lines, int cols, double factor)
 {
 	int	k;
 	int	l;
@@ -145,12 +145,15 @@ void	scale_xy(t_points ***data, int lines, int cols, float factor)
 	}
 }
 
-void	rotate_z(t_points ***data, int lines, int cols, float radians)
+void	rotate_z(t_points ***data, int lines, int cols, double radians)
 {
 	int		k;
 	int		l;
-	float	sin_r;
-	float	cos_r;
+	double	sin_r;
+	double	cos_r;
+	double a;
+	double b;
+
 
 	sin_r = sin(radians);
 	cos_r = cos(radians);
@@ -160,8 +163,10 @@ void	rotate_z(t_points ***data, int lines, int cols, float radians)
 		l = 0;
 		while (l < cols)
 		{
-			data[k][l]->x = data[k][l]->x * cos_r - data[k][l]->y * sin_r;
-			data[k][l]->y = data[k][l]->x * sin_r + data[k][l]->y * cos_r;
+			a = data[k][l]->x;
+			b = data[k][l]->y;
+			data[k][l]->x = a * cos_r - b * sin_r;
+			data[k][l]->y = a * sin_r + b * cos_r;
 			l++;
 		}
 		k++;
@@ -199,17 +204,17 @@ void	translate(t_wframe *wframe, int x, int y)
 		l = 0;
 		while (l < wframe->cols)
 		{
-			wframe->data[k][l]->x += x * F;
-			wframe->data[k][l]->y += y * F;
+			wframe->data[k][l]->x += x;
+			wframe->data[k][l]->y += y;
 			l++;
 		}
 		k++;
 	}
 }
 
-void	swap(int *z, int *x)
+void	swap(double *z, double *x)
 {
-	int	temp;
+	double	temp;
 
 	temp = *z;
 	*z = *x;

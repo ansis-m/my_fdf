@@ -6,28 +6,33 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/22 19:45:18 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 14:05:55 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	pixel_put(t_image *frame, int x, int y, float density)
+void	pixel_put(t_image *frame, int x, int y, double density)
 {
 	char	*dst;
 	int		color;
 	int		intensity;
 
-	if (density < 0.1)
-		return ;
 	intensity = 0xFF * density;
-	color = 0xFFFFFF; // (intensity << 24 | intensity << 16 | intensity << 8 | intensity);
+	color = (intensity << 16 | intensity << 8 | intensity);
 	dst = frame->addr
 		+ (x * frame->line_length + y * (frame->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
+	if (*(unsigned int *)dst < color)
+		*(unsigned int *)dst = color;
 }
 
-float	fraction(float x)
+int	roundd(double intersect_y)
+{
+	intersect_y += 0.5;
+	return ((int)intersect_y);
+}
+
+double	fraction(double x)
 {
 	int	integer;
 
@@ -37,7 +42,7 @@ float	fraction(float x)
 	return (x - integer + 1);
 }
 
-float	residue(float x)
+double	residue(double x)
 {
 	return (1 - fraction(x));
 }
@@ -45,13 +50,12 @@ float	residue(float x)
 void	draw_line(t_image *frame, t_points a, t_points b)
 {
 	bool	steep;
-	float	dx;
-	float	dy;
-	float	gradient;
-	float	intersect_y;
-	int		i;
+	double	dx;
+	double	dy;
+	double	gradient;
+	double	intersect_y;
 
-	steep = (abs(b.y - a.y) > abs(b.x - a.x));
+	steep = ((b.y - a.y) * (b.y - a.y) > (b.x - a.x) * (b.x - a.x));
 	if (steep)
 	{
 		swap(&a.x, &a.y);
@@ -71,16 +75,15 @@ void	draw_line(t_image *frame, t_points a, t_points b)
 	intersect_y = a.y;
 	while (a.x < b.x)
 	{
-		i = intersect_y;
 		if (steep)
 		{
-			pixel_put(frame, i / F, a.x / F, 1);//residue(intersect_y));
-			pixel_put(frame, (i - F) / F, a.x / F, 1);//fraction(intersect_y));
+			pixel_put(frame, roundd(intersect_y), a.x, residue(intersect_y));
+			pixel_put(frame, roundd(intersect_y) - 1, a.x, fraction(intersect_y));
 		}
 		else
 		{
-			pixel_put(frame, a.x / F, i / F, 1);//residue(intersect_y));
-			pixel_put(frame, a.x / F, (i - F) / F, 1);//fraction(intersect_y));
+			pixel_put(frame, a.x, roundd(intersect_y), residue(intersect_y));
+			pixel_put(frame, a.x, roundd(intersect_y) - 1, fraction(intersect_y));
 		}
 		intersect_y += gradient;
 		a.x++;
@@ -143,6 +146,8 @@ void	isometric(t_points ***data, int lines, int cols)
 {
 	int	k;
 	int	l;
+	double	a;
+	double	b;
 
 	k = 0;
 	while (k < lines)
@@ -150,8 +155,10 @@ void	isometric(t_points ***data, int lines, int cols)
 		l = 0;
 		while (l < cols)
 		{
-			data[k][l]->x = (data[k][l]->x - data[k][l]->z) * 0.8944;
-			data[k][l]->y = (data[k][l]->x + data[k][l]->z) * 0.4472 - data[k][l]->y;
+			a = data[k][l]->x;
+			b = data[k][l]->y;
+			data[k][l]->x = (a - data[k][l]->z) * 0.8944;
+			data[k][l]->y = (a + data[k][l]->z) * 0.4472 - b;
 			data[k][l]->h = 1;
 			l++;
 		}
@@ -167,11 +174,13 @@ void	draw_map(t_points ***data, int lines, int columns)
 	wframe.lines = lines;
 	wframe.cols = columns;
 	
-	init_points(wframe.data, wframe.lines, wframe.cols);
+	//init_points(wframe.data, wframe.lines, wframe.cols);
 	scale_xy(wframe.data, wframe.lines, wframe.cols, 10);
 	
-	translate(&wframe, 50, 200);
-	//rotate_z(wframe.data, wframe.lines, wframe.cols, 0.785398);
+	//translate(&wframe, 50, 200);
+	//rotate_z(wframe.data, wframe.lines, wframe.cols, -M_PI_4/2);
+	//rotate_z(wframe.data, wframe.lines, wframe.cols, -M_PI_2);
+	//rotate_z(wframe.data, wframe.lines, wframe.cols, -M_PI_4);
 	isometric(wframe.data, wframe.lines, wframe.cols);
 	
 	//reset(wframe.data, wframe.lines, wframe.cols);  //NOT needed here but elswhere
