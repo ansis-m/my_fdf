@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 14:05:55 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 16:35:27 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,15 +173,15 @@ void	draw_map(t_points ***data, int lines, int columns)
 	wframe.data = data;
 	wframe.lines = lines;
 	wframe.cols = columns;
-	
-	//init_points(wframe.data, wframe.lines, wframe.cols);
 	scale_xy(wframe.data, wframe.lines, wframe.cols, 10);
-	
-	//translate(&wframe, 50, 200);
-	//rotate_z(wframe.data, wframe.lines, wframe.cols, -M_PI_4/2);
+	rotate_z(wframe.data, wframe.lines, wframe.cols, M_PI_2);
+	rotate_z(wframe.data, wframe.lines, wframe.cols, M_PI_2/2);
+	rotate_y(wframe.data, wframe.lines, wframe.cols, M_PI);
+	rotate_x(wframe.data, wframe.lines, wframe.cols, M_PI / 8);
+	rotate_y(wframe.data, wframe.lines, wframe.cols, 0.6154729074);
 	//rotate_z(wframe.data, wframe.lines, wframe.cols, -M_PI_2);
 	//rotate_z(wframe.data, wframe.lines, wframe.cols, -M_PI_4);
-	isometric(wframe.data, wframe.lines, wframe.cols);
+	//isometric(wframe.data, wframe.lines, wframe.cols);
 	
 	//reset(wframe.data, wframe.lines, wframe.cols);  //NOT needed here but elswhere
 	wframe.center = true;

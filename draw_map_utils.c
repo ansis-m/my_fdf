@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 10:10:53 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 12:49:25 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 16:07:32 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,27 +104,6 @@ int	draw_frame(t_wframe	*wframe)
 	return (1);
 }
 
-void	init_points(t_points ***data, int lines, int cols)
-{
-	int	k;
-	int	l;
-
-	k = 0;
-	while (k < lines)
-	{
-		l = 0;
-		while (l < cols)
-		{
-			data[k][l]->x *= F;
-			data[k][l]->y *= F;
-			data[k][l]->z *= F;
-			data[k][l]->f = F;
-			l++;
-		}
-		k++;
-	}
-}
-
 void	scale_xy(t_points ***data, int lines, int cols, double factor)
 {
 	int	k;
@@ -167,6 +146,60 @@ void	rotate_z(t_points ***data, int lines, int cols, double radians)
 			b = data[k][l]->y;
 			data[k][l]->x = a * cos_r - b * sin_r;
 			data[k][l]->y = a * sin_r + b * cos_r;
+			l++;
+		}
+		k++;
+	}
+}
+
+void	rotate_x(t_points ***data, int lines, int cols, double radians)
+{
+	int				k;
+	int				l;
+	double	sin_r;
+	double	cos_r;
+	double 	a;
+	double 	b;
+
+	sin_r = sin(radians);
+	cos_r = cos(radians);
+	k = 0;
+	while (k < lines)
+	{
+		l = 0;
+		while (l < cols)
+		{
+			a = data[k][l]->y;
+			b = data[k][l]->z;
+			data[k][l]->y = a * cos_r + b * sin_r;
+			data[k][l]->z = b * cos_r - a * sin_r;
+			l++;
+		}
+		k++;
+	}
+}
+
+void	rotate_y(t_points ***data, int lines, int cols, double radians)
+{
+	int				k;
+	int				l;
+	double	sin_r;
+	double	cos_r;
+	double 	a;
+	double 	b;
+
+	sin_r = sin(radians);
+	cos_r = cos(radians);
+	k = 0;
+	while (k < lines)
+	{
+		l = 0;
+		while (l < cols)
+		{
+			a = data[k][l]->x;
+			b = data[k][l]->z;
+			data[k][l]->x = a * cos_r + b * sin_r;
+			data[k][l]->z = b * cos_r - a * sin_r;
 			l++;
 		}
 		k++;

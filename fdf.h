@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 13:55:54 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 16:03:36 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ void		reset(t_points ***data, int lines, int cols);
 void		isometric(t_points ***data, int lines, int cols);
 void		init_points(t_points ***data, int lines, int cols);
 void		rotate_z(t_points ***data, int lines, int cols, double radians);
+void		rotate_x(t_points ***data, int lines, int cols, double radians);
+void		rotate_y(t_points ***data, int lines, int cols, double radians);
 void		center_projection(t_wframe *wframe);
 void		draw_line(t_image *frame, t_points a, t_points b);
 
