@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 16:03:36 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 17:33:51 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,18 @@
 # include	"./minilibx-linux/mlx.h"
 # include	"./minilibx-linux/mlx_int.h"
 
-//Scaling factor F
-# define F 1
 //width of an image
 # define W	1000
 //height of an image
-# define H	600
+# define H	700
 
 typedef struct s_points
 {
-	int	h;
+	double	h;
 	double	x;
 	double	y;
 	double	z;
-	int	f;
+	double	f;
 }	t_points;
 
 typedef struct  s_image
@@ -74,6 +72,7 @@ typedef struct s_wframe
 	int			cols;
 	bool		draw_new;
 	bool		center;
+	bool		orthographic;
 }				t_wframe;
 
 void		free_line_ptrs(char *line_ptrs[1000]);
@@ -90,11 +89,11 @@ int			draw_frame(t_wframe	*wframe);
 void		scale_xy(t_points ***data, int lines, int cols, double factor);
 void		translate(t_wframe *wframe, int x, int y);
 void		reset(t_points ***data, int lines, int cols);
-void		isometric(t_points ***data, int lines, int cols);
 void		init_points(t_points ***data, int lines, int cols);
 void		rotate_z(t_points ***data, int lines, int cols, double radians);
 void		rotate_x(t_points ***data, int lines, int cols, double radians);
 void		rotate_y(t_points ***data, int lines, int cols, double radians);
+void		orthographic(t_points ***data, int lines, int cols);
 void		center_projection(t_wframe *wframe);
 void		draw_line(t_image *frame, t_points a, t_points b);
 

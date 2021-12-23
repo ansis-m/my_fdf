@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 16:58:38 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 17:58:11 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,10 @@ int	key_hook(int keycode, t_wframe	*wframe)
 	if (keycode == XK_Escape)
 		wframe->window.mlx->end_loop = True;
 	else if (keycode == XK_KP_Subtract)
+	{
 		scale_xy(wframe->data, wframe->lines, wframe->cols, 0.8);
+		wframe->center = true;
+	}
 	else if (keycode == XK_KP_Add)
 	{
 		scale_xy(wframe->data, wframe->lines, wframe->cols, 1.2);
@@ -138,32 +141,45 @@ int	key_hook(int keycode, t_wframe	*wframe)
 		translate(wframe, 0, -10);
 		wframe->center = false;
 	}
+	else if (keycode == XK_o)
+	{
+		if (wframe->orthographic)
+		{
+			wframe->orthographic = false;
+			reset(wframe->data, wframe->lines, wframe->cols);
+			wframe->center = true;
+		}
+		else
+		{
+			orthographic(wframe->data, wframe->lines, wframe->cols);
+			wframe->orthographic = true;
+			wframe->center = true;
+		}
+	}
+	else if (keycode == XK_x)
+	{
+		wframe->center = true;
+		rotate_x(wframe->data, wframe->lines, wframe->cols, M_PI / 16);
+	}
+	else if (keycode == XK_y)
+	{
+		wframe->center = true;
+		rotate_y(wframe->data, wframe->lines, wframe->cols, M_PI / 16);
+	}
+	else if (keycode == XK_z)
+	{
+		wframe->center = true;
+		rotate_z(wframe->data, wframe->lines, wframe->cols, M_PI / 16);
+	}
 	wframe->draw_new = true;
 	return (0);
 }
 
-void	isometric(t_points ***data, int lines, int cols)
+void	orthographic(t_points ***data, int lines, int cols)
 {
-	int	k;
-	int	l;
-	double	a;
-	double	b;
-
-	k = 0;
-	while (k < lines)
-	{
-		l = 0;
-		while (l < cols)
-		{
-			a = data[k][l]->x;
-			b = data[k][l]->y;
-			data[k][l]->x = (a - data[k][l]->z) * 0.8944;
-			data[k][l]->y = (a + data[k][l]->z) * 0.4472 - b;
-			data[k][l]->h = 1;
-			l++;
-		}
-		k++;
-	}
+	rotate_z(data, lines, cols, M_PI* 0.7);
+	rotate_y(data, lines, cols, M_PI + 0.6154729074);
+	rotate_x(data, lines, cols, M_PI / 8);
 }
 
 void	draw_map(t_points ***data, int lines, int columns)
@@ -174,17 +190,11 @@ void	draw_map(t_points ***data, int lines, int columns)
 	wframe.lines = lines;
 	wframe.cols = columns;
 	scale_xy(wframe.data, wframe.lines, wframe.cols, 10);
-	rotate_z(wframe.data, wframe.lines, wframe.cols, M_PI* 0.7);
-	rotate_y(wframe.data, wframe.lines, wframe.cols, M_PI + 0.6154729074);
-	rotate_x(wframe.data, wframe.lines, wframe.cols, M_PI / 8);
-
-
-	
-	//reset(wframe.data, wframe.lines, wframe.cols);  //NOT needed here but elswhere
 	wframe.center = true;
 	wframe.draw_new = true;
+	wframe.orthographic = false;
 	wframe.window.mlx = mlx_init();
-	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 600, "Hello fucker!");
+	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 700, "Hello fucker!");
 	wframe.frame.img = mlx_new_image(wframe.window.mlx, W, H);
 	wframe.frame.addr = mlx_get_data_addr(wframe.frame.img, &wframe.frame.bits_per_pixel, &wframe.frame.line_length, &wframe.frame.endian);
 	mlx_key_hook(wframe.window.win, &key_hook, &wframe);

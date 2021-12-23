@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 10:10:53 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 16:07:32 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 17:49:34 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ void	rotate_z(t_points ***data, int lines, int cols, double radians)
 	double a;
 	double b;
 
-
 	sin_r = sin(radians);
 	cos_r = cos(radians);
 	k = 0;
@@ -219,7 +218,7 @@ void	reset(t_points ***data, int lines, int cols)
 		{
 			data[k][l]->x = l * data[k][l]->f;
 			data[k][l]->y = k * data[k][l]->f;
-			data[k][l]->h = data[k][l]->z;
+			data[k][l]->z = data[k][l]->h;
 			l++;
 		}
 		k++;
