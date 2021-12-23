@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 17:58:11 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 18:55:38 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,16 @@ int	loop(t_wframe	*wframe)
 	wframe->draw_new = false;
 	mlx_put_image_to_window(wframe->window.mlx,
 		wframe->window.win, wframe->frame.img, 0, 0);
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 30, 0xFFFFFF, "fdf project by AMALECKI");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 70, 0xFF0000, "ZOOM-IN +");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 90, 0xFF0000, "ZOOM-OUT -");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 110, 0xFF0000, "TRANSLATE arrow keys");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 130, 0xFF0000, "ORTHOGRAPHIC PROJECTION o key");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 150, 0xFF0000, "ROTATE Z AXIS z key");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 170, 0xFF0000, "ROTATE X AXIS x key");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 190, 0xFF0000, "ROTATE Y AXIS y key");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 210, 0xFF0000, "SCALE HEIGHT h key");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 230, 0xFFFF00, "EXIT escape key");
 	return (1);
 }
 
@@ -143,17 +153,14 @@ int	key_hook(int keycode, t_wframe	*wframe)
 	}
 	else if (keycode == XK_o)
 	{
+		reset(wframe->data, wframe->lines, wframe->cols);
+		wframe->center = true;
 		if (wframe->orthographic)
-		{
 			wframe->orthographic = false;
-			reset(wframe->data, wframe->lines, wframe->cols);
-			wframe->center = true;
-		}
 		else
 		{
 			orthographic(wframe->data, wframe->lines, wframe->cols);
 			wframe->orthographic = true;
-			wframe->center = true;
 		}
 	}
 	else if (keycode == XK_x)
@@ -194,7 +201,7 @@ void	draw_map(t_points ***data, int lines, int columns)
 	wframe.draw_new = true;
 	wframe.orthographic = false;
 	wframe.window.mlx = mlx_init();
-	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 700, "Hello fucker!");
+	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 700, "AMAZING fdf PROJECT BY AMALECKI@42WOLFSBURG");
 	wframe.frame.img = mlx_new_image(wframe.window.mlx, W, H);
 	wframe.frame.addr = mlx_get_data_addr(wframe.frame.img, &wframe.frame.bits_per_pixel, &wframe.frame.line_length, &wframe.frame.endian);
 	mlx_key_hook(wframe.window.win, &key_hook, &wframe);

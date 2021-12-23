@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:21:13 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/19 18:14:04 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 18:16:15 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,5 @@ int	main(int argc, char *argv[])
 	if (lines * columns >= 2)
 		draw_map(data, lines, columns);
 	free_data(data, lines, columns);
-	printf("exit to main!!!\n");
 	return (1);
 }
