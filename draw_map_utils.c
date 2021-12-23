@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 10:10:53 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 18:41:18 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 19:38:10 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,11 @@ void	clear_frame(t_image *frame)
 	}
 }
 
-void	center_projection(t_wframe *wframe)
+void	get_min_max(t_wframe *wframe, int xxyy[4])
 {
 	int		i;
 	int		j;
-	int		xxyy[4];
 
-	xxyy[0] = wframe->data[0][0]->x;
-	xxyy[1] = wframe->data[0][0]->x;
-	xxyy[2] = wframe->data[0][0]->y;
-	xxyy[3] = wframe->data[0][0]->y;
 	i = 0;
 	while (i < wframe->lines)
 	{
@@ -63,6 +58,19 @@ void	center_projection(t_wframe *wframe)
 		}
 		i++;
 	}
+}
+
+void	center_projection(t_wframe *wframe)
+{
+	int		xxyy[4];
+	int		i;
+	int		j;
+
+	xxyy[0] = wframe->data[0][0]->x;
+	xxyy[1] = wframe->data[0][0]->x;
+	xxyy[2] = wframe->data[0][0]->y;
+	xxyy[3] = wframe->data[0][0]->y;
+	get_min_max(wframe, xxyy);
 	i = 0;
 	while (i < wframe->lines)
 	{
@@ -122,133 +130,4 @@ void	scale_xy(t_points ***data, int lines, int cols, double factor)
 		}
 		k++;
 	}
-}
-
-void	rotate_z(t_points ***data, int lines, int cols, double radians)
-{
-	int		k;
-	int		l;
-	double	sin_r;
-	double	cos_r;
-	double a;
-	double b;
-
-	sin_r = sin(radians);
-	cos_r = cos(radians);
-	k = 0;
-	while (k < lines)
-	{
-		l = 0;
-		while (l < cols)
-		{
-			a = data[k][l]->x;
-			b = data[k][l]->y;
-			data[k][l]->x = a * cos_r - b * sin_r;
-			data[k][l]->y = a * sin_r + b * cos_r;
-			l++;
-		}
-		k++;
-	}
-}
-
-void	rotate_x(t_points ***data, int lines, int cols, double radians)
-{
-	int				k;
-	int				l;
-	double	sin_r;
-	double	cos_r;
-	double 	a;
-	double 	b;
-
-	sin_r = sin(radians);
-	cos_r = cos(radians);
-	k = 0;
-	while (k < lines)
-	{
-		l = 0;
-		while (l < cols)
-		{
-			a = data[k][l]->y;
-			b = data[k][l]->z;
-			data[k][l]->y = a * cos_r + b * sin_r;
-			data[k][l]->z = b * cos_r - a * sin_r;
-			l++;
-		}
-		k++;
-	}
-}
-
-void	rotate_y(t_points ***data, int lines, int cols, double radians)
-{
-	int				k;
-	int				l;
-	double	sin_r;
-	double	cos_r;
-	double 	a;
-	double 	b;
-
-	sin_r = sin(radians);
-	cos_r = cos(radians);
-	k = 0;
-	while (k < lines)
-	{
-		l = 0;
-		while (l < cols)
-		{
-			a = data[k][l]->x;
-			b = data[k][l]->z;
-			data[k][l]->x = a * cos_r + b * sin_r;
-			data[k][l]->z = b * cos_r - a * sin_r;
-			l++;
-		}
-		k++;
-	}
-}
-
-void	reset(t_points ***data, int lines, int cols)
-{
-	int	k;
-	int	l;
-
-	k = 0;
-	while (k < lines)
-	{
-		l = 0;
-		while (l < cols)
-		{
-			data[k][l]->x = l * data[k][l]->f;
-			data[k][l]->y = k * data[k][l]->f;
-			data[k][l]->z = data[k][l]->h;
-			l++;
-		}
-		k++;
-	}
-}
-
-void	translate(t_wframe *wframe, int x, int y)
-{
-	int	k;
-	int	l;
-
-	k = 0;
-	while (k < wframe->lines)
-	{
-		l = 0;
-		while (l < wframe->cols)
-		{
-			wframe->data[k][l]->x += x;
-			wframe->data[k][l]->y += y;
-			l++;
-		}
-		k++;
-	}
-}
-
-void	swap(double *z, double *x)
-{
-	double	temp;
-
-	temp = *z;
-	*z = *x;
-	*x = temp;
 }

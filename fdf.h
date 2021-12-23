@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 17:33:51 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/23 19:36:47 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,6 @@ void		rotate_y(t_points ***data, int lines, int cols, double radians);
 void		orthographic(t_points ***data, int lines, int cols);
 void		center_projection(t_wframe *wframe);
 void		draw_line(t_image *frame, t_points a, t_points b);
+void		get_min_max(t_wframe *wframe, int xxyy[4]);
 
 #endif
