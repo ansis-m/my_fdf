@@ -20,16 +20,11 @@ all: $(NAME)
 $(NAME): $(OBJ) $(LIBRARY) fdf.h
 	$(CC) -o $(NAME) $(OBJ) $(LIBRARY) $(LFLAGS)
 
-$(LIBRARY):
-	$(MAKE) -C ${DIR}
-
 clean:
 	$(RM) $(OBJ) *~ core *.core
-	$(RM) $(DIR)/obj
 
 fclean:
 	$(RM) $(NAME) $(OBJ) *~ core *.core
-	$(MAKE) clean -C ${DIR}
 
 re:     fclean all
 
