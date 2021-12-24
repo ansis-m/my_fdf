@@ -4,7 +4,6 @@ test
 *.out
 .vscode*
 .vscode/*
-fdf
 text
 text.txt
 working_test2.c
