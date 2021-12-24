@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 13:51:01 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 14:10:44 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@
 # define W	1000
 //height of an image
 # define H	700
+
+//width of the display
+# define WD	1200
+//height of the display
+# define HD	700
 
 typedef struct s_points
 {
@@ -110,5 +115,6 @@ int			key_hook(int keycode, t_wframe	*wframe);
 void		normalize_z(t_wframe *wframe);
 void		init_scale_z(t_wframe *wframe, double min, double max);
 void		normalize_xy(t_wframe *wframe);
+bool		normalize_points(t_points *a, t_points *b, double *dx, double *dy);
 
 #endif

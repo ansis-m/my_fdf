@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 13:50:50 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 13:59:45 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	init_wframe(t_wframe *wframe, t_points ***data, int lines, int columns)
 	wframe->draw_new = true;
 	wframe->orthographic = false;
 	wframe->window.mlx = mlx_init();
-	wframe->window.win = mlx_new_window(wframe->window.mlx, 1200, 700,
+	wframe->window.win = mlx_new_window(wframe->window.mlx, WD, HD,
 			"AMAZING fdf PROJECT BY AMALECKI@42WOLFSBURG");
 	wframe->frame.img = mlx_new_image(wframe->window.mlx, W, H);
 	wframe->frame.addr = mlx_get_data_addr(wframe->frame.img,
