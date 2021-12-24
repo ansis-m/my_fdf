@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 19:37:47 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 11:24:27 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 13:48:27 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,62 @@ void	scale_z(t_points ***data, int lines, int cols, double factor)
 		}
 		k++;
 	}
+}
+
+void	scale_height(int keycode, t_wframe	*wframe)
+{
+	reset(wframe->data, wframe->lines, wframe->cols);
+	wframe->center = true;
+	if (keycode == XK_Page_Up)
+		scale_z(wframe->data, wframe->lines, wframe->cols, 1.4);
+	if (keycode == XK_Page_Down)
+		scale_z(wframe->data, wframe->lines, wframe->cols, 0.7);
+	if (wframe->orthographic)
+		orthographic(wframe->data, wframe->lines, wframe->cols);
+}
+
+void	init_scale_z(t_wframe *wframe, double min, double max)
+{
+	int	k;
+	int	l;
+
+	k = 0;
+	while (k < wframe->lines)
+	{
+		l = 0;
+		while (l < wframe->cols)
+		{
+			wframe->data[k][l]->z = (wframe->data[k][l]->z - min)
+				/ (max - min) * 20;
+			wframe->data[k][l]->h = wframe->data[k][l]->z;
+			l++;
+		}
+		k++;
+	}
+}
+
+void	normalize_z(t_wframe *wframe)
+{
+	int		k;
+	int		l;
+	double	min;
+	double	max;
+
+	min = wframe->data[0][0]->z;
+	max = wframe->data[0][0]->z;
+	k = 0;
+	while (k < wframe->lines)
+	{
+		l = 0;
+		while (l < wframe->cols)
+		{
+			if (wframe->data[k][l]->z > max)
+				max = wframe->data[k][l]->z;
+			if (wframe->data[k][l]->z < max)
+				min = wframe->data[k][l]->z;
+			l++;
+		}
+		k++;
+	}
+	init_scale_z(wframe, min, max);
 }
