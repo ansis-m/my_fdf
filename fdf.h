@@ -6,19 +6,19 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 19:36:47 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 10:42:35 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
+# define _USE_MATH_DEFINES
+# include	<math.h>
 # include	<unistd.h>
 # include	<stdlib.h>
 # include	<stdbool.h>
 # include	<limits.h>
-#define _USE_MATH_DEFINES
-# include	<math.h>
 # include	<sys/types.h>
 # include	<sys/stat.h>
 # include	<fcntl.h> 
@@ -41,21 +41,21 @@ typedef struct s_points
 	double	f;
 }	t_points;
 
-typedef struct  s_image
+typedef struct s_image
 {
-	XImage                  *img;
-	Pixmap                  pix;
-	GC                              gc;
-	int                             line_length;
-	int                             bits_per_pixel;
-	int                             width;
-	int                             height;
-	int		endian;
-	int                             type;
-	int                             format;
-	char                    *addr;
-	XShmSegmentInfo shm;
-}                               t_image;
+	XShmSegmentInfo	shm;
+	XImage			*img;
+	Pixmap			pix;
+	GC				gc;
+	int				line_length;
+	int				bits_per_pixel;
+	int				width;
+	int				height;
+	int				endian;
+	int				type;
+	int				format;
+	char			*addr;
+}	t_image;
 
 typedef struct s_vars
 {
@@ -97,5 +97,14 @@ void		orthographic(t_points ***data, int lines, int cols);
 void		center_projection(t_wframe *wframe);
 void		draw_line(t_image *frame, t_points a, t_points b);
 void		get_min_max(t_wframe *wframe, int xxyy[4]);
+void		init_wframe(t_wframe *wframe, t_points ***data,
+				int lines, int columns);
+int			roundd(double intersect_y);
+double		fraction(double x);
+double		residue(double x);
+void		manage_translate(int keycode, t_wframe	*wframe);
+void		manage_orthographic(t_wframe	*wframe);
+void		manage_rotate(int keycode, t_wframe	*wframe);
+int			key_hook(int keycode, t_wframe	*wframe);
 
 #endif

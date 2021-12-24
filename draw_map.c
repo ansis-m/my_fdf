@@ -6,89 +6,11 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 18:55:38 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 10:43:40 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-void	pixel_put(t_image *frame, int x, int y, double density)
-{
-	char	*dst;
-	int		color;
-	int		intensity;
-
-	intensity = 0xFF * density;
-	color = (intensity << 16 | intensity << 8 | intensity);
-	dst = frame->addr
-		+ (x * frame->line_length + y * (frame->bits_per_pixel / 8));
-	if (*(unsigned int *)dst < color)
-		*(unsigned int *)dst = color;
-}
-
-int	roundd(double intersect_y)
-{
-	intersect_y += 0.5;
-	return ((int)intersect_y);
-}
-
-double	fraction(double x)
-{
-	int	integer;
-
-	integer = x;
-	if (x > 0)
-		return (x - integer);
-	return (x - integer + 1);
-}
-
-double	residue(double x)
-{
-	return (1 - fraction(x));
-}
-
-void	draw_line(t_image *frame, t_points a, t_points b)
-{
-	bool	steep;
-	double	dx;
-	double	dy;
-	double	gradient;
-	double	intersect_y;
-
-	steep = ((b.y - a.y) * (b.y - a.y) > (b.x - a.x) * (b.x - a.x));
-	if (steep)
-	{
-		swap(&a.x, &a.y);
-		swap(&b.x, &b.y);
-	}
-	if (a.x > b.x)
-	{
-		swap(&a.x, &b.x);
-		swap(&a.y, &b.y);
-	}
-	dx = b.x - a.x;
-	dy = b.y - a.y;
-	if (b.x == a.x)
-		gradient = 1;
-	else
-		gradient = dy / dx;
-	intersect_y = a.y;
-	while (a.x < b.x)
-	{
-		if (steep)
-		{
-			pixel_put(frame, roundd(intersect_y), a.x, residue(intersect_y));
-			pixel_put(frame, roundd(intersect_y) - 1, a.x, fraction(intersect_y));
-		}
-		else
-		{
-			pixel_put(frame, a.x, roundd(intersect_y), residue(intersect_y));
-			pixel_put(frame, a.x, roundd(intersect_y) - 1, fraction(intersect_y));
-		}
-		intersect_y += gradient;
-		a.x++;
-	}
-}
 
 int	loop(t_wframe	*wframe)
 {
@@ -97,16 +19,20 @@ int	loop(t_wframe	*wframe)
 	wframe->draw_new = false;
 	mlx_put_image_to_window(wframe->window.mlx,
 		wframe->window.win, wframe->frame.img, 0, 0);
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 30, 0xFFFFFF, "fdf project by AMALECKI");
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 70, 0xFF0000, "ZOOM-IN +");
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 90, 0xFF0000, "ZOOM-OUT -");
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 110, 0xFF0000, "TRANSLATE arrow keys");
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 130, 0xFF0000, "ORTHOGRAPHIC PROJECTION o key");
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 150, 0xFF0000, "ROTATE Z AXIS z key");
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 170, 0xFF0000, "ROTATE X AXIS x key");
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 190, 0xFF0000, "ROTATE Y AXIS y key");
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 210, 0xFF0000, "SCALE HEIGHT h key");
-	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 230, 0xFFFF00, "EXIT escape key");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 30,
+		0xFFFFFF, "fdf project by AMALECKI");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 70,
+		0xFF0000, "ZOOM-IN ZOOM-OUT + -");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 90,
+		0xFF0000, "TRANSLATE ARROW KEYS");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 110,
+		0xFF0000, "ORTHOGRAPHIC PROJECTION o KEY");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 130,
+		0xFF0000, "ROTATE Z X Y AXIS z x y KEYS");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 150,
+		0xFF0000, "SCALE HEIGHT h KEY");
+	mlx_string_put(wframe->window.mlx, wframe->window.win, 1000, 170,
+		0xFFFF00, "EXIT escape KEY");
 	return (1);
 }
 
@@ -115,95 +41,32 @@ int	mouse_move(int x, int y, t_wframe *wframe)
 	mlx_clear_window(wframe->window.mlx, wframe->window.win);
 	if (1)
 		mlx_string_put(wframe->window.mlx, wframe->window.win, x, y, 0xFFFFFF, "Where going");
+	return (1);
 }
 
-int	key_hook(int keycode, t_wframe	*wframe)
+void	init_wframe(t_wframe *wframe, t_points ***data, int lines, int columns)
 {
-	if (keycode == XK_Escape)
-		wframe->window.mlx->end_loop = True;
-	else if (keycode == XK_KP_Subtract)
-	{
-		scale_xy(wframe->data, wframe->lines, wframe->cols, 0.8);
-		wframe->center = true;
-	}
-	else if (keycode == XK_KP_Add)
-	{
-		scale_xy(wframe->data, wframe->lines, wframe->cols, 1.2);
-		wframe->center = true;
-	}
-	else if (keycode == XK_Down)
-	{
-		translate(wframe, 10, 0);
-		wframe->center = false;
-	}
-	else if (keycode == XK_Up)
-	{
-		translate(wframe, -10, 0);
-		wframe->center = false;
-	}
-	else if (keycode == XK_Right)
-	{
-		translate(wframe, 0, 10);
-		wframe->center = false;
-	}
-	else if (keycode == XK_Left)
-	{
-		translate(wframe, 0, -10);
-		wframe->center = false;
-	}
-	else if (keycode == XK_o)
-	{
-		reset(wframe->data, wframe->lines, wframe->cols);
-		wframe->center = true;
-		if (wframe->orthographic)
-			wframe->orthographic = false;
-		else
-		{
-			orthographic(wframe->data, wframe->lines, wframe->cols);
-			wframe->orthographic = true;
-		}
-	}
-	else if (keycode == XK_x)
-	{
-		wframe->center = true;
-		rotate_x(wframe->data, wframe->lines, wframe->cols, M_PI / 16);
-	}
-	else if (keycode == XK_y)
-	{
-		wframe->center = true;
-		rotate_y(wframe->data, wframe->lines, wframe->cols, M_PI / 16);
-	}
-	else if (keycode == XK_z)
-	{
-		wframe->center = true;
-		rotate_z(wframe->data, wframe->lines, wframe->cols, M_PI / 16);
-	}
+	wframe->data = data;
+	wframe->lines = lines;
+	wframe->cols = columns;
+	wframe->center = true;
 	wframe->draw_new = true;
-	return (0);
-}
-
-void	orthographic(t_points ***data, int lines, int cols)
-{
-	rotate_z(data, lines, cols, M_PI* 0.7);
-	rotate_y(data, lines, cols, M_PI + 0.6154729074);
-	rotate_x(data, lines, cols, M_PI / 8);
+	wframe->orthographic = false;
+	wframe->window.mlx = mlx_init();
+	wframe->window.win = mlx_new_window(wframe->window.mlx, 1200, 700,
+			"AMAZING fdf PROJECT BY AMALECKI@42WOLFSBURG");
+	wframe->frame.img = mlx_new_image(wframe->window.mlx, W, H);
+	wframe->frame.addr = mlx_get_data_addr(wframe->frame.img,
+			&wframe->frame.bits_per_pixel, &wframe->frame.line_length,
+			&wframe->frame.endian);
 }
 
 void	draw_map(t_points ***data, int lines, int columns)
 {
 	t_wframe	wframe;
 
-	wframe.data = data;
-	wframe.lines = lines;
-	wframe.cols = columns;
+	init_wframe(&wframe, data, lines, columns);
 	scale_xy(wframe.data, wframe.lines, wframe.cols, 10);
-	wframe.center = true;
-	wframe.draw_new = true;
-	wframe.orthographic = false;
-	wframe.window.mlx = mlx_init();
-	wframe.window.win = mlx_new_window(wframe.window.mlx, 1200, 700, "AMAZING fdf PROJECT BY AMALECKI@42WOLFSBURG");
-	wframe.frame.img = mlx_new_image(wframe.window.mlx, W, H);
-	wframe.frame.addr = mlx_get_data_addr(wframe.frame.img, &wframe.frame.bits_per_pixel, &wframe.frame.line_length, &wframe.frame.endian);
 	mlx_key_hook(wframe.window.win, &key_hook, &wframe);
 	mlx_hook(wframe.window.win, 6, 1L << 6, &mouse_move, &wframe);
 	mlx_loop_hook(wframe.window.mlx, &loop, &wframe);

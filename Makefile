@@ -1,5 +1,5 @@
 SRC = main.c main_utils.c ft_atoi.c draw_map.c draw_map_utils.c draw_map_utils2.c get_next_line.c \
-get_next_line_utils.c rotate.c
+get_next_line_utils.c rotate.c draw_line.c draw_line_utils.c keycode_utils.c
 
 INC=/usr/include
 DIR=./minilibx-linux
