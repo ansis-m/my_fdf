@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:21:13 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 10:57:35 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 15:27:57 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,10 @@ int	main(int argc, char *argv[])
 	t_points	***data;
 
 	if (argc != 2)
+	{
+		write(1, "Too many arguments!\n", 20);
 		return (1);
+	}
 	read_file(argv[1], line_ptrs, &lines, &columns);
 	data = (t_points ***)malloc(sizeof(t_points **) * lines);
 	check((void *)data, line_ptrs);

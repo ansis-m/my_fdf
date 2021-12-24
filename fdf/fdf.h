@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 14:10:44 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 14:29:43 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,5 +116,6 @@ void		normalize_z(t_wframe *wframe);
 void		init_scale_z(t_wframe *wframe, double min, double max);
 void		normalize_xy(t_wframe *wframe);
 bool		normalize_points(t_points *a, t_points *b, double *dx, double *dy);
+bool		check_size(t_wframe	*wframe);
 
 #endif

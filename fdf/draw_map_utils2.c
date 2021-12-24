@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 19:37:47 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 13:48:27 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 18:04:41 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,13 @@ void	scale_height(int keycode, t_wframe	*wframe)
 
 void	init_scale_z(t_wframe *wframe, double min, double max)
 {
-	int	k;
-	int	l;
+	double	divisor;
+	int		k;
+	int		l;
 
+	divisor = 1;
+	if (max != min)
+		divisor = (max - min) / 20;
 	k = 0;
 	while (k < wframe->lines)
 	{
@@ -62,7 +66,7 @@ void	init_scale_z(t_wframe *wframe, double min, double max)
 		while (l < wframe->cols)
 		{
 			wframe->data[k][l]->z = (wframe->data[k][l]->z - min)
-				/ (max - min) * 20;
+				/ divisor;
 			wframe->data[k][l]->h = wframe->data[k][l]->z;
 			l++;
 		}

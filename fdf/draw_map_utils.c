@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 10:10:53 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/23 19:38:10 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 18:04:53 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,31 +85,18 @@ void	center_projection(t_wframe *wframe)
 	}
 }
 
-int	draw_frame(t_wframe	*wframe)
+bool	check_size(t_wframe	*wframe)
 {
-	int		i;
-	int		j;
+	int		xxyy[4];
 
-	clear_frame(&wframe->frame);
-	if (wframe->center)
-		center_projection(wframe);
-	i = 0;
-	while (i < wframe->lines)
-	{
-		j = 0;
-		while (j < wframe->cols)
-		{
-			if (i < wframe->lines - 1)
-				draw_line(&wframe->frame,
-					*(wframe->data[i][j]), *(wframe->data[i + 1][j]));
-			if (j < wframe->cols - 1)
-				draw_line(&wframe->frame,
-					*(wframe->data[i][j]), *(wframe->data[i][j + 1]));
-			j++;
-		}
-		i++;
-	}
-	return (1);
+	xxyy[0] = wframe->data[0][0]->x;
+	xxyy[1] = wframe->data[0][0]->x;
+	xxyy[2] = wframe->data[0][0]->y;
+	xxyy[3] = wframe->data[0][0]->y;
+	get_min_max(wframe, xxyy);
+	if (xxyy[0] > H || xxyy[1] < 0)
+		return (false);
+	return (true);
 }
 
 void	scale_xy(t_points ***data, int lines, int cols, double factor)
