@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 10:43:40 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 13:22:35 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,71 @@ void	init_wframe(t_wframe *wframe, t_points ***data, int lines, int columns)
 			&wframe->frame.endian);
 }
 
+void	scale_height(int keycode, t_wframe	*wframe)
+{
+	reset(wframe->data, wframe->lines, wframe->cols);
+	wframe->center = true;
+	if (keycode == XK_Page_Up)
+		scale_z(wframe->data, wframe->lines, wframe->cols, 1.4);
+	if (keycode == XK_Page_Down)
+		scale_z(wframe->data, wframe->lines, wframe->cols, 0.7);
+	if (wframe->orthographic)
+		orthographic(wframe->data, wframe->lines, wframe->cols);
+}
+
+void	init_scale_z(t_wframe *wframe, double min, double max)
+{
+	int	k;
+	int	l;
+
+	k = 0;
+	while (k < wframe->lines)
+	{
+		l = 0;
+		while (l < wframe->cols)
+		{
+			wframe->data[k][l]->z = (wframe->data[k][l]->z - min)
+				/ (max - min) * 20;
+			wframe->data[k][l]->h = wframe->data[k][l]->z;
+			l++;
+		}
+		k++;
+	}
+}
+
+void	normalize_z(t_wframe *wframe)
+{
+	int		k;
+	int		l;
+	double	min;
+	double	max;
+
+	min = wframe->data[0][0]->z;
+	max = wframe->data[0][0]->z;
+	k = 0;
+	while (k < wframe->lines)
+	{
+		l = 0;
+		while (l < wframe->cols)
+		{
+			if (wframe->data[k][l]->z > max)
+				max = wframe->data[k][l]->z;
+			if (wframe->data[k][l]->z < max)
+				min = wframe->data[k][l]->z;
+			l++;
+		}
+		k++;
+	}
+	init_scale_z(wframe, min, max);
+}
+
 void	draw_map(t_points ***data, int lines, int columns)
 {
 	t_wframe	wframe;
 
 	init_wframe(&wframe, data, lines, columns);
-	scale_xy(wframe.data, wframe.lines, wframe.cols, 10);
+	normalize_z(&wframe);
+	//scale_xy(wframe.data, wframe.lines, wframe.cols, 10);
 	mlx_key_hook(wframe.window.win, &key_hook, &wframe);
 	mlx_hook(wframe.window.win, 6, 1L << 6, &mouse_move, &wframe);
 	mlx_loop_hook(wframe.window.mlx, &loop, &wframe);

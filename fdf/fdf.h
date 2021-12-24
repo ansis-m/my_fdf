@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 10:54:46 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 13:21:56 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void		clear_frame(t_image *frame);
 void		swap(double *z, double *x);
 int			draw_frame(t_wframe	*wframe);
 void		scale_xy(t_points ***data, int lines, int cols, double factor);
+void		scale_z(t_points ***data, int lines, int cols, double factor);
+void		scale_height(int keycode, t_wframe	*wframe);
 void		translate(t_wframe *wframe, int x, int y);
 void		reset(t_points ***data, int lines, int cols);
 void		init_points(t_points ***data, int lines, int cols);
@@ -106,5 +108,7 @@ void		manage_translate(int keycode, t_wframe	*wframe);
 void		manage_orthographic(t_wframe	*wframe);
 void		manage_rotate(int keycode, t_wframe	*wframe);
 int			key_hook(int keycode, t_wframe	*wframe);
+void		normalize_z(t_wframe *wframe);
+void		init_scale_z(t_wframe *wframe, double min, double max);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 10:30:52 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 10:38:22 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/24 11:43:11 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ int	key_hook(int keycode, t_wframe	*wframe)
 		manage_orthographic(wframe);
 	else if (keycode == XK_x || keycode == XK_y || keycode == XK_z)
 		manage_rotate(keycode, wframe);
+	else if (keycode == XK_Page_Up || keycode == XK_Page_Down)
+		scale_height(keycode, wframe);
 	wframe->draw_new = true;
 	return (0);
 }
