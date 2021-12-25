@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/25 08:47:19 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/25 11:56:36 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/25 12:15:56 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,28 @@ void	get_zrange(t_wframe	*wframe, double zrange[3])
 			l++;
 		}
 		k++;
+	}
+}
+
+void	draw_frame_helper(t_wframe	*wframe, double zrange[3])
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (i < wframe->lines)
+	{
+		j = 0;
+		while (j < wframe->cols)
+		{
+			if (i < wframe->lines - 1)
+				draw_line(wframe, zrange,
+					*(wframe->data[i][j]), *(wframe->data[i + 1][j]));
+			if (j < wframe->cols - 1)
+				draw_line(wframe, zrange,
+					*(wframe->data[i][j]), *(wframe->data[i][j + 1]));
+			j++;
+		}
+		i++;
 	}
 }

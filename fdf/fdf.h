@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/25 12:01:45 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/25 12:30:22 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,5 +125,8 @@ bool			check_size(t_wframe	*wframe);
 void			manage_parallel(int keycode, t_wframe	*wframe);
 void			put_strings(t_wframe	*wframe);
 void			get_zrange(t_wframe	*wframe, double zrange[3]);
+void			draw_frame_helper(t_wframe	*wframe, double zrange[3]);
+void			draw_line_helper(t_wframe *wframe,
+					double zrange[3], t_points *a, t_points *b);
 
 #endif

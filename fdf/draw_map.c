@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 16:13:48 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/25 11:56:27 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/25 12:33:47 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,7 @@ int	loop(t_wframe	*wframe)
 
 int	draw_frame(t_wframe	*wframe)
 {
-	int		i;
-	int		j;
-	double		zrange[3];
+	double		zrange[4];
 
 	get_zrange(wframe, zrange);
 	if (wframe->center)
@@ -40,22 +38,7 @@ int	draw_frame(t_wframe	*wframe)
 	if (!check_size(wframe))
 		return (0);
 	clear_frame(&wframe->frame);
-	i = 0;
-	while (i < wframe->lines)
-	{
-		j = 0;
-		while (j < wframe->cols)
-		{
-			if (i < wframe->lines - 1)
-				draw_line(wframe, zrange,
-					*(wframe->data[i][j]), *(wframe->data[i + 1][j]));
-			if (j < wframe->cols - 1)
-				draw_line(wframe, zrange,
-					*(wframe->data[i][j]), *(wframe->data[i][j + 1]));
-			j++;
-		}
-		i++;
-	}
+	draw_frame_helper(wframe, zrange);
 	return (1);
 }
 
