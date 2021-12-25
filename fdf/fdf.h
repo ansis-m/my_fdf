@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:22:10 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/25 12:30:22 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/25 13:16:51 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include	<sys/types.h>
 # include	<sys/stat.h>
 # include	<fcntl.h> 
-# include	<stdio.h>
 # include	"get_next_line.h"
 # include	"../minilibx-linux/mlx.h"
 # include	"../minilibx-linux/mlx_int.h"

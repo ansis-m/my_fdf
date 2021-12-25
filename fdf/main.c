@@ -6,13 +6,11 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:21:13 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 15:27:57 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/25 13:17:42 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-#include <stdio.h>
 
 void	check(void *data, char **line_ptrs)
 {
