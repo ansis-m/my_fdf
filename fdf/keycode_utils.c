@@ -6,7 +6,7 @@
 /*   By: amalecki <amalecki@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 10:30:52 by amalecki          #+#    #+#             */
-/*   Updated: 2021/12/24 11:43:11 by amalecki         ###   ########.fr       */
+/*   Updated: 2021/12/25 08:55:31 by amalecki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,20 @@ void	manage_orthographic(t_wframe	*wframe)
 	{
 		orthographic(wframe->data, wframe->lines, wframe->cols);
 		wframe->orthographic = true;
+	}
+}
+
+void	manage_parallel(int keycode, t_wframe	*wframe)
+{
+	reset(wframe->data, wframe->lines, wframe->cols);
+	wframe->center = true;
+	wframe->orthographic = false;
+	if (keycode == XK_1)
+		rotate_x(wframe->data, wframe->lines, wframe->cols, M_PI_2);
+	if (keycode == XK_2)
+	{
+		rotate_y(wframe->data, wframe->lines, wframe->cols, M_PI_2);
+		rotate_z(wframe->data, wframe->lines, wframe->cols, M_PI);
 	}
 }
 
@@ -91,6 +105,8 @@ int	key_hook(int keycode, t_wframe	*wframe)
 		manage_rotate(keycode, wframe);
 	else if (keycode == XK_Page_Up || keycode == XK_Page_Down)
 		scale_height(keycode, wframe);
+	else if (keycode == XK_1 || keycode == XK_2 || keycode == XK_3)
+		manage_parallel(keycode, wframe);
 	wframe->draw_new = true;
 	return (0);
 }
